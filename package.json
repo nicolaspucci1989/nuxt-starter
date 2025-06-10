@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@primevue/nuxt-module": "^4.0.3",
     "@primevue/themes": "^4.0.3",
     "@prisma/nuxt": "^0.0.34",
     "nuxt": "^3.12.4",
@@ -18,9 +20,7 @@
     "vue": "latest"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.12.1",
-    "@primevue/nuxt-module": "^4.0.3",
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^5.22.0",
     "prisma": "^5.17.0"
   }
 }
