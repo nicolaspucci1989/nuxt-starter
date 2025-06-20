@@ -4,10 +4,13 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
-    const userId = getRouterParam(event, "userId");
-    await prisma.user.delete({ where: { id: Number(userId) } });
+    const body = await readBody(event);
+    await prisma.contract.create({
+      data: body.contract,
+    });
     return { ok: true };
   } catch (error) {
-    return { error };
+    console.log(error);
+    return { error: "Failed to create new contract" };
   }
 });

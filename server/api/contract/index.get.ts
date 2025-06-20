@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const query: { search?: string } = getQuery(event);
-  const filter: Prisma.UserFindManyArgs = {
+  const filter: Prisma.ContractFindManyArgs = {
     orderBy: {
       updatedAt: "asc",
     },
@@ -13,12 +13,12 @@ export default defineEventHandler(async (event) => {
 
   if (query?.search) {
     filter.where = {
-      email: {
+      title: {
         contains: query.search,
       },
     };
   }
 
-  const users = await prisma.user.findMany(filter);
-  return users;
+  const contract = await prisma.contract.findMany(filter);
+  return contract;
 });

@@ -4,16 +4,16 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
-    const userId = getRouterParam(event, "userId");
+    const contractId = getRouterParam(event, "contractId");
     const body = await readBody(event);
-    const user = await prisma.user.update({
+    const contract = await prisma.contract.update({
       where: {
-        id: Number(userId),
+        id: Number(contractId),
       },
-      data: body.user,
+      data: body.contract,
     });
-    return user
+    return contract
   } catch (error) {
-    return { error: "Failed to put user" };
+    return { error: "Failed to put contract" };
   }
 });
