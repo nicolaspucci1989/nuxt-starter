@@ -19,7 +19,10 @@ const createContract = async () => {
             },
             body: JSON.stringify({
                 contract: {
-                    email: email.value,
+                    title: title.value,
+                    description: description.value,
+                    startDate: start.value,
+                    endDate: end.value,
                 }
             }),
         });
@@ -28,7 +31,7 @@ const createContract = async () => {
             throw new Error('Failed to add user');
         }
 
-        emit('user-added');
+        emit('created');
         title.value = '';
         description.value = '';
     } catch (error) {

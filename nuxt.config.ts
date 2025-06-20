@@ -1,4 +1,5 @@
 import Aura from "@primevue/themes/aura";
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -11,5 +12,13 @@ export default defineNuxtConfig({
         preset: Aura,
       },
     },
+  },
+   nitro: {
+    experimental: {
+      tasks: true
+    },
+    scheduledTasks: {
+      '* * * * *': ['echo']
+    }
   },
 });
