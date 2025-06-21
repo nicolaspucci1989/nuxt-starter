@@ -98,7 +98,7 @@ const onReload = (data: DataTablePageEvent) => {
       </DataTable>
     </div>
     <Dialog header="Add User" v-model:visible="showDialog" modal>
-      <AddContractForm @created="onCreated" />
+      <ContractCreateEdit @created="onCreated" :contract="selectedContract" />
     </Dialog>
   </div>
 </template>
