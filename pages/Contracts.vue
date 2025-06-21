@@ -1,24 +1,36 @@
 <script setup lang="ts">
-import { format, parseISO } from 'date-fns';
-import { useFetch } from 'nuxt/app';
 import { ref } from 'vue';
+import { useFetch, useRoute, useRouter } from 'nuxt/app';
+import { format, parseISO } from 'date-fns';
 
+const route = useRoute();
+const router = useRouter();
 const showDialog = ref(false);
-const search = ref('');
-const rowsAmount = ref(5);
-const filter = ref({})
+const search = ref(route.query.search || '');
+const pageSize = ref(Number(route.query.pageSize) || 10);
+const page = ref(Number(route.query.page) || 1);
+
+router.replace({
+  query: {
+    ...route.query,
+    search: search.value,
+    pageSize: pageSize.value,
+    page: page.value,
+  },
+});
 
 const { data, error, refresh: fetchContracts, status } = await useFetch('/api/contract', {
   query: {
-    page: 2,
+    page: page.value,
     search: search.value,
-    pageSize: rowsAmount.value,
+    pageSize: pageSize.value,
   }
 });
 
 if (error.value) {
   console.error('Failed to fetch contracts:', error.value);
 }
+
 const onCreated = () => {
   showDialog.value = false;
   fetchContracts();
@@ -36,10 +48,11 @@ const onReload = (data: { page: number }) => {
       <InputText v-model="search" placeholder="Buscar" />
       <Button @click="showDialog = true" label="Agregar Nuevo Contrato" />
     </div>
+
     <div class="w-full max-w-4xl mt-8">
-      <DataTable :loading="status == 'pending'" :value="data?.contracts" :first="(data?.page - 1) * data?.pageSize"
-        @page="onReload" paginator lazy :total-records="data?.total" :rows="rowsAmount"
-        :rows-per-page-options="[5, 25, 50, 75, 100]" class="w-full">
+      <DataTable class="w-full" :loading="status == 'pending'" :value="data?.contracts"
+        :first="(data?.page - 1) * data?.pageSize" @page="onReload" paginator lazy :total-records="data?.total"
+        :rows="pageSize" :rows-per-page-options="[5, 25, 50, 75, 100]">
         <Column field="title" header="Titulo"></Column>
         <Column field="startDate" header="Inicio">
           <template #body="slotProps">
