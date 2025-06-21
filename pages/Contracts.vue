@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useFetch, useRoute, useRouter } from 'nuxt/app';
 import { format, parseISO } from 'date-fns';
+import { DataTablePageEvent } from 'primevue/datatable';
 
 const route = useRoute();
 const router = useRouter();
@@ -21,9 +22,9 @@ router.replace({
 
 const { data, error, refresh: fetchContracts, status } = await useFetch('/api/contract', {
   query: {
-    page: page.value,
-    search: search.value,
-    pageSize: pageSize.value,
+    page,
+    search,
+    pageSize,
   }
 });
 
@@ -36,8 +37,12 @@ const onCreated = () => {
   fetchContracts();
 };
 
-const onReload = (data: { page: number }) => {
-  console.log('Reloading contracts...', data);
+const onReload = (data: DataTablePageEvent) => {
+  pageSize.value = data.rows;
+  page.value = data.page + 1;
+  console.log('Page number:', data.page, 'page size', data.rows);
+
+  fetchContracts();
 };
 </script>
 
@@ -52,7 +57,7 @@ const onReload = (data: { page: number }) => {
     <div class="w-full max-w-4xl mt-8">
       <DataTable class="w-full" :loading="status == 'pending'" :value="data?.contracts"
         :first="(data?.page - 1) * data?.pageSize" @page="onReload" paginator lazy :total-records="data?.total"
-        :rows="pageSize" :rows-per-page-options="[5, 25, 50, 75, 100]">
+        :rows="pageSize" :rows-per-page-options="[5, 10, 25, 50, 75, 100]">
         <Column field="title" header="Titulo"></Column>
         <Column field="startDate" header="Inicio">
           <template #body="slotProps">
