@@ -4,7 +4,6 @@ import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  console.log("Fetching contracts");
   const query: { search?: string; page?: number; pageSize?: number } =
     getQuery(event);
   const page = Number(query.page) || 1;
@@ -34,7 +33,6 @@ export default defineEventHandler(async (event) => {
       where: filter.where,
     }),
   ]);
-  console.log(contracts, total);
 
   return {
     contracts,
