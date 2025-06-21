@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const filter: Prisma.ContractFindManyArgs = {
     orderBy: {
-      updatedAt: "asc",
+      updatedAt: "desc",
     },
   };
 

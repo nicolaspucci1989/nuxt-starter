@@ -18,7 +18,7 @@ export default defineNuxtConfig({
       tasks: true
     },
     scheduledTasks: {
-      '* * * * *': ['echo']
+      // '* * * * *': ['echo']
     }
   },
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useFetch, useRoute, useRouter } from 'nuxt/app';
 import { format, parseISO } from 'date-fns';
 import { DataTablePageEvent } from 'primevue/datatable';
@@ -11,14 +11,17 @@ const search = ref(route.query.search || '');
 const pageSize = ref(Number(route.query.pageSize) || 10);
 const page = ref(Number(route.query.page) || 1);
 
-router.replace({
-  query: {
-    ...route.query,
-    search: search.value,
-    pageSize: pageSize.value,
-    page: page.value,
-  },
-});
+watch([search, page, pageSize], updateRouteParams)
+function updateRouteParams() {
+  router.replace({
+    query: {
+      ...route.query,
+      search: search.value,
+      pageSize: pageSize.value,
+      page: page.value,
+    },
+  });
+}
 
 const { data, error, refresh: fetchContracts, status } = await useFetch('/api/contract', {
   query: {
@@ -40,9 +43,6 @@ const onCreated = () => {
 const onReload = (data: DataTablePageEvent) => {
   pageSize.value = data.rows;
   page.value = data.page + 1;
-  console.log('Page number:', data.page, 'page size', data.rows);
-
-  fetchContracts();
 };
 </script>
 
