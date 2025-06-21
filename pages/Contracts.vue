@@ -1,8 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { format, parseISO } from 'date-fns';
+import { useFetch } from 'nuxt/app';
+import { ref } from 'vue';
+
 const showDialog = ref(false);
 const search = ref('');
-const { data: contracts, error, refresh: fetchContracts } = await useFetch('/api/contract');
+const rowsAmount = ref(5);
+const filter = ref({})
+
+const { data, error, refresh: fetchContracts, status } = await useFetch('/api/contract', {
+  query: {
+    page: 2,
+    search: search.value,
+    pageSize: rowsAmount.value,
+  }
+});
 
 if (error.value) {
   console.error('Failed to fetch contracts:', error.value);
@@ -10,6 +22,10 @@ if (error.value) {
 const onCreated = () => {
   showDialog.value = false;
   fetchContracts();
+};
+
+const onReload = (data: { page: number }) => {
+  console.log('Reloading contracts...', data);
 };
 </script>
 
@@ -21,7 +37,9 @@ const onCreated = () => {
       <Button @click="showDialog = true" label="Agregar Nuevo Contrato" />
     </div>
     <div class="w-full max-w-4xl mt-8">
-      <DataTable :value="contracts" class="w-full">
+      <DataTable :loading="status == 'pending'" :value="data?.contracts" :first="(data?.page - 1) * data?.pageSize"
+        @page="onReload" paginator lazy :total-records="data?.total" :rows="rowsAmount"
+        :rows-per-page-options="[5, 25, 50, 75, 100]" class="w-full">
         <Column field="title" header="Titulo"></Column>
         <Column field="startDate" header="Inicio">
           <template #body="slotProps">

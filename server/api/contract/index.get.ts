@@ -4,7 +4,12 @@ import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  const query: { search?: string } = getQuery(event);
+  console.log("Fetching contracts");
+  const query: { search?: string; page?: number; pageSize?: number } =
+    getQuery(event);
+  const page = Number(query.page) || 1;
+  const pageSize = Number(query.pageSize) || 25;
+
   const filter: Prisma.ContractFindManyArgs = {
     orderBy: {
       updatedAt: "asc",
@@ -19,6 +24,23 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  const contract = await prisma.contract.findMany(filter);
-  return contract;
+  const [contracts, total] = await Promise.all([
+    prisma.contract.findMany({
+      ...filter,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.contract.count({
+      where: filter.where,
+    }),
+  ]);
+  console.log(contracts, total);
+
+  return {
+    contracts,
+    total,
+    page,
+    pageSize,
+    pages: Math.ceil(total / pageSize),
+  };
 });
