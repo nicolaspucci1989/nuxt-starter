@@ -7,9 +7,16 @@ import { DataTablePageEvent } from 'primevue/datatable';
 const route = useRoute();
 const router = useRouter();
 const showDialog = ref(false);
-const search = ref(route.query.search || '');
+const selectedContract = ref(null);
+
 const pageSize = ref(Number(route.query.pageSize) || 10);
 const page = ref(Number(route.query.page) || 1);
+const preSearch = ref('')
+const search = ref('');
+search.value = Array.isArray(route.query.search)
+  ? route.query.search[0] || ''
+  : route.query.search || '';
+preSearch.value = search.value;
 
 watch([search, page, pageSize], updateRouteParams)
 function updateRouteParams() {
@@ -50,7 +57,11 @@ const onReload = (data: DataTablePageEvent) => {
   <div class="flex flex-col items-center justify-start min-h-screen p-8 space-y-4">
     <h1 class="text-2xl font-bold mb-4">Contratos</h1>
     <div class="flex justify-between items-center w-full max-w-4xl mb-4">
-      <InputText v-model="search" placeholder="Buscar" />
+      <IconField>
+        <InputText v-model="preSearch" @blur="search = preSearch" @keydown.enter="search = preSearch"
+        placeholder="Buscar" />
+        <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch"/>
+      </IconField>
       <Button @click="showDialog = true" label="Agregar Nuevo Contrato" />
     </div>
 
@@ -72,6 +83,11 @@ const onReload = (data: DataTablePageEvent) => {
         <Column field="createdAt" header="Creación">
           <template #body="slotProps">
             {{ format(parseISO(slotProps.data.createdAt), 'dd/MM/yyyy') }}
+          </template>
+        </Column>
+        <Column>
+          <template #body="slotProps">
+            <Button icon="pi pi-pencil" size="small" text @click="selectedContract = slotProps.data" />
           </template>
         </Column>
         <template #empty>
