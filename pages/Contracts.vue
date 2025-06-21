@@ -59,8 +59,8 @@ const onReload = (data: DataTablePageEvent) => {
     <div class="flex justify-between items-center w-full max-w-4xl mb-4">
       <IconField>
         <InputText v-model="preSearch" @blur="search = preSearch" @keydown.enter="search = preSearch"
-        placeholder="Buscar" />
-        <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch"/>
+          placeholder="Buscar" />
+        <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch" />
       </IconField>
       <Button @click="showDialog = true" label="Agregar Nuevo Contrato" />
     </div>
