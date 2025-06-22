@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
-    const contractId = getRouterParam(event, 'userId');
+    const contractId = getRouterParam(event, 'contractId');
     const contract = await prisma.user.findUnique({
       where: {
         id: Number(contractId),

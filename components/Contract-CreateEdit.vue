@@ -6,12 +6,13 @@ const $props = defineProps({
         default: () => ({}),
     },
 });
-const id = $props.contract.id || null;
 const title = ref('');
 const description = ref('');
 const start = ref(null);
 const end = ref(null);
 const emit = defineEmits(['created']);
+
+console.log('Contract-CreateEdit', $props.contract);
 
 if (JSON.stringify($props.contract) !== '{}') {
     title.value = $props.contract.title || '';
@@ -25,7 +26,26 @@ const createContract = async () => {
         if (!isBefore(start.value, end.value)) {
             throw new Error('La fecha de inicio debe ser anterior a la fecha de fin.');
         }
-        const response = await $fetch('/api/contract', {
+        if ($props.contract.id) {
+            await $fetch(`/api/contract/${$props.contract.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contract: {
+                        title: title.value,
+                        description: description.value,
+                        startDate: start.value,
+                        endDate: end.value,
+                    }
+                }),
+            });
+
+            emit('created');
+            return;
+        }
+        await $fetch('/api/contract', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,9 +60,6 @@ const createContract = async () => {
             }),
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to add user');
-        }
 
         emit('created');
         title.value = '';
@@ -70,7 +87,7 @@ const createContract = async () => {
                 <DatePicker class="mb-4" v-model="end" fluid placeholder="Fin" />
             </div>
             <div class="flex justify-end">
-                <Button label="Crear Contrato" type="submit" />
+                <Button :label="`${$props.contract.id ? 'Editar' : 'Crear'} Contrato`" type="submit" />
             </div>
         </form>
     </div>

@@ -7,7 +7,7 @@ import { DataTablePageEvent } from 'primevue/datatable';
 const route = useRoute();
 const router = useRouter();
 const showDialog = ref(false);
-const selectedContract = ref(null);
+const selectedContract = ref(undefined);
 
 const pageSize = ref(Number(route.query.pageSize) || 10);
 const page = ref(Number(route.query.page) || 1);
@@ -30,17 +30,13 @@ function updateRouteParams() {
   });
 }
 
-const { data, error, refresh: fetchContracts, status } = await useFetch('/api/contract', {
+const { data, refresh: fetchContracts, status } = await useFetch('/api/contract', {
   query: {
     page,
     search,
     pageSize,
   }
 });
-
-if (error.value) {
-  console.error('Failed to fetch contracts:', error.value);
-}
 
 const onCreated = () => {
   showDialog.value = false;
@@ -62,7 +58,10 @@ const onReload = (data: DataTablePageEvent) => {
           placeholder="Buscar" />
         <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch" />
       </IconField>
-      <Button @click="showDialog = true" label="Agregar Nuevo Contrato" />
+      <Button @click="() => {
+        selectedContract = undefined
+        showDialog = true
+      }" label="Agregar Nuevo Contrato" />
     </div>
 
     <div class="w-full max-w-4xl mt-8">
@@ -87,7 +86,10 @@ const onReload = (data: DataTablePageEvent) => {
         </Column>
         <Column>
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" size="small" text @click="selectedContract = slotProps.data" />
+            <Button icon="pi pi-pencil" size="small" text @click="() => {
+              selectedContract = slotProps.data
+              showDialog = true;
+            }" />
           </template>
         </Column>
         <template #empty>
