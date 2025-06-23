@@ -1,18 +1,18 @@
 <script setup>
 import { isBefore } from 'date-fns';
+
 const $props = defineProps({
     contract: {
         type: Object,
         default: () => ({}),
     },
 });
+const { handleFileInput, files } = useFileStorage({ clearOldFiles: false })
 const title = ref('');
 const description = ref('');
 const start = ref(null);
 const end = ref(null);
 const emit = defineEmits(['created']);
-
-console.log('Contract-CreateEdit', $props.contract);
 
 if (JSON.stringify($props.contract) !== '{}') {
     title.value = $props.contract.title || '';
@@ -38,6 +38,7 @@ const createContract = async () => {
                         description: description.value,
                         startDate: start.value,
                         endDate: end.value,
+                        files: files.value,
                     }
                 }),
             });
@@ -56,10 +57,10 @@ const createContract = async () => {
                     description: description.value,
                     startDate: start.value,
                     endDate: end.value,
+                    files: files.value
                 }
             }),
         });
-
 
         emit('created');
         title.value = '';
@@ -85,6 +86,13 @@ const createContract = async () => {
             </div>
             <div>
                 <DatePicker class="mb-4" v-model="end" fluid placeholder="Fin" />
+            </div>
+            <div>
+                <FileUpload label="nose" mode="basic" @select="handleFileInput({ target: { files: $event.files } })"
+                    accept="image/*" />
+            </div>
+            <div v-if="$props.contract.media?.length">
+                <Image v-for="media in $props.contract.media" :src="`http://localhost:3000/storage/${media.location}`" />
             </div>
             <div class="flex justify-end">
                 <Button :label="`${$props.contract.id ? 'Editar' : 'Crear'} Contrato`" type="submit" />

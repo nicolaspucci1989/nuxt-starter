@@ -28,6 +28,7 @@ model Contract {
   updatedAt      DateTime           @default(now()) @updatedAt
   version        Int                @default(1)
   contractRoles  ContractRole[]
+  media          String?
 }
 
 model ContractRole {

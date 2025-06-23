@@ -47,6 +47,11 @@ const onReload = (data: DataTablePageEvent) => {
   pageSize.value = data.rows;
   page.value = data.page + 1;
 };
+
+const selectContract = (contract: any) => {
+  selectedContract.value = contract;
+  showDialog.value = true;
+};
 </script>
 
 <template>
@@ -58,10 +63,7 @@ const onReload = (data: DataTablePageEvent) => {
           placeholder="Buscar" />
         <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch" />
       </IconField>
-      <Button @click="() => {
-        selectedContract = undefined
-        showDialog = true
-      }" label="Agregar Nuevo Contrato" />
+      <Button @click="selectContract" label="Agregar Nuevo Contrato" />
     </div>
 
     <div class="w-full max-w-4xl mt-8">
@@ -86,10 +88,7 @@ const onReload = (data: DataTablePageEvent) => {
         </Column>
         <Column>
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" size="small" text @click="() => {
-              selectedContract = slotProps.data
-              showDialog = true;
-            }" />
+            <Button icon="pi pi-pencil" size="small" text @click="selectContract(slotProps.data)" />
           </template>
         </Column>
         <template #empty>
