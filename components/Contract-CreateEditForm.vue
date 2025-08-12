@@ -143,8 +143,14 @@ const onBlur = () => {
             <form>
                 <div>
                     <div class="flex flex-col md:flex-row mb-4 gap-2">
-                        <InputText class="md:w-1/2" type="text" v-model="title" placeholder="Titulo" />
-                        <InputText class="md:w-1/2" type="text" v-model="description" placeholder="Descripción" />
+                        <div class="md:w-1/2">
+                            <div>Nombre</div>
+                            <InputText class="w-full" type="text" v-model="title" placeholder="Titulo" />
+                        </div>
+                        <div class="md:w-1/2">
+                            <div>Descripcion</div>
+                            <InputText class="w-full" type="text" v-model="description" placeholder="Descripción" />
+                        </div>
                     </div>
                     <div class="flex flex-col md:flex-row mb-4 gap-2">
                         <div class="mb-4 md:w-1/3">
@@ -211,4 +217,5 @@ const onBlur = () => {
         }
     }
 }
+
 </style>
