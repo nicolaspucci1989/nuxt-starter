@@ -164,11 +164,11 @@ const onBlur = () => {
                     <div class="flex flex-col md:flex-row mb-4 gap-4">
                         <div class="w-full md:w-1/2">
                             <div>Inquilinos</div>
-                            <ContractParticipantSelect v-model="tenants" />
+                            <Contract-ParticipantSelect v-model="tenants" />
                         </div>
                         <div class="w-full md:w-1/2">
                             <div>Propietarios</div>
-                            <ContractParticipantSelect v-model="owners" />
+                            <Contract-ParticipantSelect v-model="owners" />
                         </div>
                     </div>
                     <div>
