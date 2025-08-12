@@ -1,18 +1,15 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import ContractService from "./ContractService";
 
 export default defineEventHandler(async (event) => {
   try {
     const contractId = getRouterParam(event, "contractId");
-    const body = await readBody(event);
+    const { contract } = await readBody(event);
 
-    const contract = await prisma.contract.update({
-      where: {
-        id: Number(contractId),
-      },
-      data: body.contract,
-    });
+    if (!contractId || !contract) {
+      return { error: "Invalid contract data" };
+    }
+
+    ContractService.update(parseInt(contractId), contract);
 
     return contract;
   } catch (error) {

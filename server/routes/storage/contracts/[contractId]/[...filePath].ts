@@ -20,7 +20,6 @@ export default defineEventHandler(async (event) => {
     ...filePathParam.split("/")
   );
 
-  console.log("File path:", filePath);
 
   if (!existsSync(filePath)) {
     return sendError(

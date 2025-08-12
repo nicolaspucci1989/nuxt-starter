@@ -11,18 +11,21 @@
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
-    "@primevue/nuxt-module": "^4.0.3",
-    "@primevue/themes": "^4.0.3",
+    "@primevue/nuxt-module": "^4.3.7",
+    "@primevue/themes": "^4.3.7",
     "@prisma/nuxt": "^0.0.34",
     "date-fns": "^4.1.0",
+    "fs-extra": "^11.3.1",
     "nuxt": "^3.12.4",
+    "nuxt-file-storage": "^0.3.0",
     "primeicons": "^7.0.0",
-    "primevue": "^4.0.3",
+    "primevue": "^4.3.7",
     "vue": "latest"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
-    "nuxt-file-storage": "^0.3.0",
-    "prisma": "^5.22.0"
+    "@types/fs-extra": "^11.0.4",
+    "prisma": "^5.22.0",
+    "sass": "^1.90.0"
   }
 }

@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
   for (const contract of contracts) {
     if (contract.media) {
-      contract.media = JSON.parse(contract.media);
+      contract.media = JSON.parse(contract.media)[0];
     }
   }
 

@@ -6,8 +6,6 @@ import { DataTablePageEvent } from 'primevue/datatable';
 
 const route = useRoute();
 const router = useRouter();
-const showDialog = ref(false);
-const selectedContract = ref(undefined);
 
 const pageSize = ref(Number(route.query.pageSize) || 10);
 const page = ref(Number(route.query.page) || 1);
@@ -30,7 +28,7 @@ function updateRouteParams() {
   });
 }
 
-const { data, refresh: fetchContracts, status } = await useFetch('/api/contract', {
+const { data, status } = await useFetch('/api/contract', {
   query: {
     page,
     search,
@@ -38,19 +36,10 @@ const { data, refresh: fetchContracts, status } = await useFetch('/api/contract'
   }
 });
 
-const onCreated = () => {
-  showDialog.value = false;
-  fetchContracts();
-};
 
 const onReload = (data: DataTablePageEvent) => {
   pageSize.value = data.rows;
   page.value = data.page + 1;
-};
-
-const selectContract = (contract: any) => {
-  selectedContract.value = contract;
-  showDialog.value = true;
 };
 </script>
 
@@ -63,7 +52,7 @@ const selectContract = (contract: any) => {
           placeholder="Buscar" />
         <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch" />
       </IconField>
-      <Button @click="selectContract" label="Agregar Nuevo Contrato" />
+      <NuxtLink :to="{name: 'contracts-new'}"><Button label="Agregar Nuevo Contrato" /></NuxtLink>
     </div>
 
     <div class="w-full max-w-4xl mt-8">
@@ -88,7 +77,7 @@ const selectContract = (contract: any) => {
         </Column>
         <Column>
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" size="small" text @click="selectContract(slotProps.data)" />
+            <NuxtLink :to="{name: 'contracts-contractId', params: {contractId: slotProps.data.id}}"><Button icon="pi pi-pencil" size="small" text /></NuxtLink>
           </template>
         </Column>
         <template #empty>
@@ -98,11 +87,5 @@ const selectContract = (contract: any) => {
         </template>
       </DataTable>
     </div>
-    <Dialog header="Add User" v-model:visible="showDialog" modal>
-      <ContractCreateEdit @created="onCreated" :contract="selectedContract" />
-    </Dialog>
   </div>
 </template>
-
-
-<style lang="scss" scoped></style>
