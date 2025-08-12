@@ -148,7 +148,7 @@ const onBlur = () => {
                             <InputText class="w-full" type="text" v-model="title" placeholder="Titulo" />
                         </div>
                         <div class="md:w-1/2">
-                            <div>Descripcion</div>
+                            <div>Descripción</div>
                             <InputText class="w-full" type="text" v-model="description" placeholder="Descripción" />
                         </div>
                     </div>
