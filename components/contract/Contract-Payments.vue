@@ -48,6 +48,14 @@ const onReload = (data: DataTablePageEvent) => {
     pageSize.value = data.rows;
     page.value = data.page + 1;
 };
+
+const newPayment = ref({
+    amount: 0,
+    date: new Date(),
+    description: '',
+});
+
+const showNewPaymentDialog = ref(false);
 </script>
 
 <template>
@@ -59,7 +67,7 @@ const onReload = (data: DataTablePageEvent) => {
                     placeholder="Buscar" />
                 <InputIcon class="pi pi-search cursor-pointer" @click="search = preSearch" />
             </IconField>
-            <NuxtLink :to="{ name: 'contracts-new' }"><Button label="Agregar Nuevo Pago" /></NuxtLink>
+            <Button @click="showNewPaymentDialog = true" label="Agregar Nuevo Pago" />
         </div>
 
         <div class="w-full max-w-4xl mt-8">
@@ -96,5 +104,16 @@ const onReload = (data: DataTablePageEvent) => {
                 </template>
             </DataTable>
         </div>
+
+        <Dialog v-model:visible="showNewPaymentDialog" modal>
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Nuevo Pago</h3>
+                <div class="flex flex-col gap-3">
+                    <InputNumber v-model="newPayment.amount" placeholder="Monto" />
+                    <InputText v-model="newPayment.description" placeholder="Descripción" />
+                    <Button label="Crear" @click="addNewParticipant" :loading="creating" />
+                </div>
+            </div>
+        </Dialog>
     </div>
 </template>
