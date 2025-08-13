@@ -2,7 +2,6 @@
 import { useFetch, useRoute } from 'nuxt/app';
 
 const $route = useRoute();
-
 const { data } = await useFetch(`/api/contract/${$route.params.contractId}`, {
     default: () => ({})
 });

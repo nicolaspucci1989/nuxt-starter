@@ -51,11 +51,26 @@ const onReload = (data: DataTablePageEvent) => {
 
 const newPayment = ref({
     amount: 0,
-    date: new Date(),
     description: '',
 });
 
 const showNewPaymentDialog = ref(false);
+const loading = ref({
+    newPayment: false,
+});
+const addNewPayment = async () => {
+    if (!newPayment.value.amount || !newPayment.value.description) {
+        return;
+    }
+    loading.value.newPayment = true;
+    await $fetch(`/api/contract/${$props.contractId}/payments`, {
+        method: 'POST',
+        body: { payment: newPayment.value }
+    });
+    showNewPaymentDialog.value = false;
+    newPayment.value = { amount: 0, description: '' };
+    loading.value.newPayment = false;
+}
 </script>
 
 <template>
@@ -71,32 +86,16 @@ const showNewPaymentDialog = ref(false);
         </div>
 
         <div class="w-full max-w-4xl mt-8">
-            <DataTable class="w-full" :loading="status == 'pending'" :value="data?.contracts"
+            <DataTable class="w-full" :loading="status == 'pending'" :value="data?.payments"
                 :first="(data?.page - 1) * data?.pageSize" @page="onReload" paginator lazy :total-records="data?.total"
                 :rows="pageSize" :rows-per-page-options="[5, 10, 25, 50, 75, 100]">
-                <Column field="title" header="Titulo"></Column>
-                <Column field="startDate" header="Inicio">
-                    <template #body="slotProps">
-                        {{ format(parseISO(slotProps.data.startDate), 'dd/MM/yyyy') }}
-                    </template>
-                </Column>
-                <Column field="endDate" header="Fin">
-                    <template #body="slotProps">
-                        {{ format(parseISO(slotProps.data.endDate), 'dd/MM/yyyy') }}
-                    </template>
-                </Column>
-                <Column field="createdAt" header="Creación">
+                <Column field="description" header="Descripción"></Column>
+                <Column field="createdAt" header="Fecha">
                     <template #body="slotProps">
                         {{ format(parseISO(slotProps.data.createdAt), 'dd/MM/yyyy') }}
                     </template>
                 </Column>
-                <Column>
-                    <template #body="slotProps">
-                        <NuxtLink :to="{ name: 'contracts-contractId', params: { contractId: slotProps.data.id } }">
-                            <Button icon="pi pi-pencil" size="small" text />
-                        </NuxtLink>
-                    </template>
-                </Column>
+                <Column field="amount" header="monto"></Column>
                 <template #empty>
                     <div class="text-center text-gray-500">
                         No hay contratos disponibles.
@@ -111,7 +110,7 @@ const showNewPaymentDialog = ref(false);
                 <div class="flex flex-col gap-3">
                     <InputNumber v-model="newPayment.amount" placeholder="Monto" />
                     <InputText v-model="newPayment.description" placeholder="Descripción" />
-                    <Button label="Crear" @click="addNewParticipant" :loading="creating" />
+                    <Button label="Crear" @click="addNewPayment" :loading="loading.newPayment" />
                 </div>
             </div>
         </Dialog>

@@ -20,17 +20,17 @@ model User {
 }
 
 model Contract {
-  id            Int            @id @default(autoincrement())
+  id            Int               @id @default(autoincrement())
   title         String
   description   String?
   startDate     DateTime
   endDate       DateTime
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now()) @updatedAt
-  version       Int            @default(1)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @default(now()) @updatedAt
+  version       Int               @default(1)
   contractRoles ContractRole[]
   media         String?
-  payments     ContractPayment[]
+  payments      ContractPayment[]
 }
 
 model ContractRole {
@@ -41,12 +41,13 @@ model ContractRole {
   contractId Int
   role       String
 }
+
 model ContractPayment {
   id          Int      @id @default(autoincrement())
   contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
   contractId  Int
   amount      Float
-  paidAt      DateTime
+  description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 }
