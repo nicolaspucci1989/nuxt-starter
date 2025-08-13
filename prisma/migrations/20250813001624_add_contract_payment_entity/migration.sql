@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "ContractPayment" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "contractId" INTEGER NOT NULL,
+    "amount" REAL NOT NULL,
+    "paidAt" DATETIME NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "ContractPayment_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
